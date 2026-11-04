@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Voyages-Voyages • Thomas, Marie &amp; Émile</title>
+  <meta name="description" content="Portefeuille Cartes Avantage &amp; Week-End+, prochaines vacances, billets et guichet de réservation express de la famille Lefèvre." />
+  <meta name="theme-color" content="#0b1120" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Voyages" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
+  <link rel="apple-touch-icon" href="assets/icon.svg" />
+  <style>
+    :root {
+      --bg: #0b1120;
+      --bg-elevated: #111827;
+      --bg-card: #162033;
+      --bg-card-hover: #1d2a42;
+      --bg-subtle: rgba(255, 255, 255, 0.04);
+      --border: rgba(148, 163, 184, 0.16);
+      --border-strong: rgba(148, 163, 184, 0.28);
+      --text: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --primary-glow: rgba(14, 165, 233, 0.22);
+      --accent: #f59e0b;
+      --accent-soft: rgba(245, 158, 11, 0.16);
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.16);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.16);
+      --purple: #8b5cf6;
+      --purple-soft: rgba(139, 92, 246, 0.16);
+      --pink: #ec4899;
+      --pink-soft: rgba(236, 72, 153, 0.16);
+      --sncf-grad: linear-gradient(135deg, #1e1b4b 0%, #311042 52%, #be123c 100%);
+      --sncf-next-grad: linear-gradient(135deg, #0f172a 0%, #1e3a8a 52%, #0284c7 100%);
+      --af-grad: linear-gradient(135deg, #091536 0%, #172554 55%, #dc2626 100%);
+      --af-marie-grad: linear-gradient(135deg, #1f1235 0%, #4c1d95 55%, #db2777 100%);
+      --fb-grad: linear-gradient(135deg, #0c192c 0%, #0369a1 60%, #38bdf8 100%);
+      --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.4);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 24px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html[data-theme="light"] {
+      --bg: #f4f7fb;
+      --bg-elevated: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --bg-subtle: #eef2f8;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif;
+      min-height: 100%;
+      overscroll-behavior-y: contain;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      padding-bottom: calc(88px + var(--safe-bottom));
+      background-image:
+        radial-gradient(circle at 12% 6%, rgba(14, 165, 233, 0.12) 0%, transparent 35%),
+        radial-gradient(circle at 88% 10%, rgba(245, 158, 11, 0.09) 0%, transparent 35%);
+    }
+
+    /* PULL TO REFRESH (Standard obligatoire @Mrthomaslef) */
+    #ptr-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9500;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      transform: translateY(-70px);
+      transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
+      opacity: 0;
+    }
+    .ptr-pill {
+      margin-top: calc(10px + var(--safe-top));
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-md);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .ptr-icon {
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.22s ease;
+      color: var(--primary);
+    }
+    .ptr-spin {
+      animation: ptrRotate 0.75s linear infinite;
+    }
+    @keyframes ptrRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* HEADER */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: calc(12px + var(--safe-top)) 18px 12px;
+      background: rgba(11, 17, 32, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    html[data-theme="light"] .app-header {
+      background: rgba(244, 247, 251, 0.86);
+    }
+    .header-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+    }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .brand-text h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-text p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--success-soft);
+      color: var(--success);
+    }
+    .sync-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .icon-btn {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--text);
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .icon-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-strong);
+    }
+    .icon-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* MAIN CONTAINER */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px 16px 32px;
+    }
+
+    /* URGENT ACTION BANNER */
+    .urgent-banner {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(220, 38, 38, 0.14) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .urgent-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      flex: 1;
+      min-width: 240px;
+    }
+    .urgent-badge {
+      background: var(--accent);
+      color: #0f172a;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .urgent-content h3 {
+      margin: 0 0 3px;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .urgent-content p {
+      margin: 0;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .urgent-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+    }
+
+    /* SUMMARY KPI STRIP */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 720px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+    .kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .kpi-val {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .kpi-sub {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* SECTION HEADERS */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 22px 0 12px;
+      flex-wrap: wrap;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-head p {
+      margin: 2px 0 0;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    /* WALLET CARDS GRID */
+    .wallet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(315px, 1fr));
+      gap: 14px;
+    }
+    .pass-card {
+      position: relative;
+      border-radius: 20px;
+      padding: 18px;
+      color: #ffffff;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 215px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+    .pass-card::before {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.07);
+      pointer-events: none;
+    }
+    .pass-sncf { background: var(--sncf-grad); }
+    .pass-sncf-next { background: var(--sncf-next-grad); }
+    .pass-af { background: var(--af-grad); }
+    .pass-af-marie { background: var(--af-marie-grad); }
+    .pass-fb { background: var(--fb-grad); }
+
+    .pass-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .pass-issuer {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+    }
+    .pass-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 3px 0 0;
+      letter-spacing: -0.01em;
+    }
+    .pass-status-pill {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(16, 185, 129, 0.55);
+      color: #a7f3d0;
+      white-space: nowrap;
+    }
+    .pass-status-pill.future {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: rgba(56, 189, 248, 0.55);
+      color: #bae6fd;
+    }
+    .pass-middle {
+      margin: 14px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .pass-number-box {
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 8px 12px;
+      border-radius: 12px;
+      flex: 1;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .pass-number-box:hover {
+      background: rgba(0, 0, 0, 0.42);
+    }
+    .pass-number-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.75;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pass-number-value {
+      font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 14.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-top: 3px;
+    }
+    .pass-qr-thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+      background: #ffffff;
+      padding: 4px;
+      flex-shrink: 0;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.15s ease;
+    }
+    .pass-qr-thumb:hover {
+      transform: scale(1.06);
+    }
+    .pass-qr-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .pass-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      font-size: 11.5px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .pass-meta-item span {
+      display: block;
+      font-size: 10px;
+      opacity: 0.72;
+      text-transform: uppercase;
+    }
+    .pass-meta-item strong {
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .pass-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 12px;
+    }
+    .pass-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.15);
+      hover: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 10px;
+      border-radius: 9px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+    .pass-btn:hover {
+      background: rgba(255, 255, 255, 0.26);
+    }
+
+    /* TRIPS TIMELINE & CARDS */
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .filter-pills::-webkit-scrollbar { display: none; }
+    .pill-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .pill-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .trips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .trip-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s ease;
+    }
+    .trip-card:hover {
+      border-color: var(--border-strong);
+    }
+    .trip-card.highlight-urgent {
+      border-left: 4px solid var(--accent);
+    }
+    .trip-card.highlight-confirmed {
+      border-left: 4px solid var(--success);
+    }
+    .trip-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .trip-badges {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge-countdown {
+      background: var(--primary-glow);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .badge-confirmed {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+    .badge-todo {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .badge-pro {
+      background: var(--purple-soft);
+      color: #c4b5fd;
+    }
+    .badge-family {
+      background: var(--pink-soft);
+      color: #f472b6;
+    }
+    .trip-title {
+      margin: 0;
+      font-size: 17.5px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .trip-dates {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+    .segments-box {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+    .segment-item {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 12px;
+    }
+    .segment-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .segment-route {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .segment-seats {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .seat-chip {
+      background: rgba(14, 165, 233, 0.14);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      color: var(--text);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .trip-footer {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .trip-notes {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      flex: 1;
+      min-width: 200px;
+    }
+    .trip-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* SMART BOOKING HUB */
+    .booking-hub {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+    .preset-chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .preset-chips::-webkit-scrollbar { display: none; }
+    .preset-chip {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 13px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .preset-chip:hover, .preset-chip.active {
+      background: var(--primary-glow);
+      border-color: var(--primary);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .field-group label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .field-input, .field-select {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 11px;
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: inherit;
+      outline: none;
+    }
+    .field-input:focus, .field-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    /* CONFLICT CHECKER ALERT */
+    .conflict-box {
+      border-radius: 13px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.45;
+    }
+    .conflict-ok {
+      background: var(--success-soft);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--text);
+    }
+    .conflict-warn {
+      background: var(--danger-soft);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: var(--text);
+    }
+
+    /* AUTO-FILL COPY BAR */
+    .autofill-bar {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    .autofill-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .autofill-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .copy-chip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      padding: 6px 11px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .copy-chip:hover {
+      border-color: var(--primary);
+      background: var(--primary-glow);
+    }
+    .copy-chip code {
+      font-family: "SF Mono", ui-monospace, monospace;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* PROVIDER LAUNCHERS */
+    .providers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 10px;
+    }
+    .provider-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: 13px;
+      padding: 12px 14px;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .provider-btn:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    .provider-info strong {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+    .provider-info span {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* CHECKLIST & IMPORTER */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 820px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+    .checklist-group {
+      margin-top: 12px;
+    }
+    .checklist-group h4 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13.5px;
+      transition: background 0.12s ease;
+    }
+    .check-item:hover {
+      background: var(--bg-subtle);
+    }
+    .check-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .check-item.done span {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    /* BOTTOM NAVIGATION */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(11, 17, 32, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      padding: 6px 12px calc(8px + var(--safe-bottom));
+    }
+    html[data-theme="light"] .bottom-nav {
+      background: rgba(255, 255, 255, 0.92);
+    }
+    .bottom-nav-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+    .nav-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 4px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .nav-tab.active {
+      color: var(--primary);
+      background: var(--primary-glow);
+    }
+    .nav-tab svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* MODAL VIEWER */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      border-radius: 22px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .modal-head h3 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .modal-img-wrap {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .modal-img-wrap img {
+      max-width: 100%;
+      max-height: 62vh;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    /* TOAST */
+    #toast {
+      position: fixed;
+      bottom: calc(84px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #10b981;
+      color: #052e16;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      z-index: 6000;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .hidden-view {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PULL TO REFRESH INDICATOR -->
+  <div id="ptr-bar" aria-hidden="true">
+    <div class="ptr-pill">
+      <span class="ptr-icon" id="ptr-icon">↓</span>
+      <span id="ptr-text">Tirer pour actualiser</span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="assets/icon.svg" alt="Voyages-Voyages" />
+        </div>
+        <div class="brand-text">
+          <h1>
+            Voyages-Voyages
+            <span class="sync-badge"><span class="sync-dot"></span>Mails &amp; iMessages synchronisés</span>
+          </h1>
+          <p>Thomas Lefèvre, Marie Parizot &amp; Émile • Hub Cartes, Vacances &amp; Réservations</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="openModalAddTrip()" title="Importer ou ajouter un voyage">
+          <span>＋ Nouveau / Coller Mail</span>
+        </button>
+        <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Changer le thème">
+          <span id="theme-icon">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ACTION URGENTE DÉTECTÉE DANS LES MAILS -->
+    <div class="urgent-banner" id="urgent-ajaccio-banner">
+      <div class="urgent-left">
+        <span class="urgent-badge">À réserver</span>
+        <div class="urgent-content">
+          <h3>✈️ Billets Air France Paris Orly ↔ Ajaccio (13 – 17 mai 2027)</h3>
+          <p>
+            Mail de <strong>Dr Nicolas Lefèvre</strong> (17/10) : <em>« Peux-tu prendre tes billets d'avion pour le week-end d'inauguration de la bergerie ? Horaires Arthur &amp; Matt : Aller <strong>13 MAI 21h50 Orly 3</strong> • Retour <strong>17 MAI 09h30 Ajaccio</strong> »</em>. Vos 2 cartes Week-End+ sont actives dès le 08/05/2027.
+          </p>
+        </div>
+      </div>
+      <div class="urgent-actions">
+        <button class="btn-secondary" onclick="copyText('912766841', 'N° Carte Week-End+ Thomas copié !')">
+          📋 Copier Carte WE+ Thomas (912766841)
+        </button>
+        <button class="btn-secondary" onclick="copyText('912766896', 'N° Carte Week-End+ Marie copié !')">
+          📋 Copier Carte WE+ Marie (912766896)
+        </button>
+        <button class="btn-primary" onclick="prefillAndJumpToBooking('ajaccio-mai-2027')">
+          ⚡ Réserver ce vol en 1 clic →
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI STRIP -->
+    <div class="kpi-grid">
+      <div class="kpi-card" onclick="switchView('wallet')">
+        <div class="kpi-top"><span>💳 Cartes Actives</span><span>SNCF &amp; AF</span></div>
+        <div class="kpi-val">4 Cartes</div>
+        <div class="kpi-sub">Avantage 2025-2027 + 2 Week-End+</div>
+      </div>
+      <div class="kpi-card" onclick="switchView('trips')">
+        <div class="kpi-top"><span>🏔️ Prochain Grand Départ</span><span>Confirmé</span></div>
+        <div class="kpi-val">Valloire</div>
+        <div class="kpi-sub">Congés 28/12 – 03/01 • TGV 6407/6406</div>
+      </div>
+      <div class="kpi-card" onclick="prefillAndJumpToBooking('valence-dec-2026')">
+        <div class="kpi-top"><span>🚄 Prochain Déplacement Pro</span><span>J-29</span></div>
+        <div class="kpi-val">3–4 Déc.</div>
+        <div class="kpi-sub">Masterclass Cryo MSK (Valence)</div>
+      </div>
+      <div class="kpi-card" onclick="switchView('wallet')">
+        <div class="kpi-top"><span>✈️ Solde Flying Blue</span><span>Explorer</span></div>
+        <div class="kpi-val">3 575 Miles</div>
+        <div class="kpi-sub">N° 1137477046 • Lié à Uber</div>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 1 : PORTEFEUILLE CARTES ==================== -->
+    <section id="view-wallet" class="app-view">
+      <div class="section-head">
+        <div>
+          <h2>💳 Mes Cartes Avantage, Week-End+ &amp; Fidélité</h2>
+          <p>Cliquez sur un numéro pour le copier ou sur le QR code pour l'afficher en plein écran lors du contrôle.</p>
+        </div>
+      </div>
+
+      <div class="wallet-grid">
+        <!-- CARTE 1 : SNCF AVANTAGE ACTUELLE -->
+        <div class="pass-card pass-sncf">
+          <div>
+            <div class="pass-top">
+              <div>
+                <div class="pass-issuer">TGV INOUI • SNCF Voyageurs</div>
+                <div class="pass-title">Carte Avantage Adulte (27-59 ans)</div>
+              </div>
+              <span class="pass-status-pill">✓ Active jusqu'au 23/12/2026</span>
+            </div>
+            <div class="pass-middle">
+              <div class="pass-number-box" onclick="copyText('29090108799317681', 'N° Carte Avantage SNCF copié !')">
+                <div class="pass-number-label">
+                  <span>N° Carte SNCF (Thomas Lefèvre)</span>
+                  <span>📋 Copier</span>
+                </div>
+                <div class="pass-number-value">290901 08 799317681</div>
+              </div>
+              <div class="pass-qr-thumb" onclick="openDocModal('Carte Avantage Adulte 2025–2026 (QR Contrôleur)', 'assets/docs/qr-avantage-2025-2026.png', 'assets/docs/carte-avantage-thomas-2025-2026.pdf', '29090108799317681')" title="Afficher le QR Code">
+                <img src="assets/docs/qr-avantage-2025-2026.png" alt="QR SNCF 2025-2026" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="pass-meta-grid">
+              <div class="pass-meta-item">
+                <span>Validité</span>
+                <strong>23/12/25 → 23/12/26</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Dossier / TCN</span>
+                <strong>CGHMFY / 870855425</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Avantages</span>
+                <strong>-30% + 1 accomp.</strong>
+              </div>
+            </div>
+            <div class="pass-actions">
+              <button class="pass-btn" onclick="openDocModal('Carte Avantage Adulte 2025–2026 (QR Contrôleur)', 'assets/docs/qr-avantage-2025-2026.png', 'assets/docs/carte-avantage-thomas-2025-2026.pdf', '29090108799317681')">
+                🔍 QR Contrôleur
+              </button>
+              <button class="pass-btn" onclick="openDocModal('Carte Avantage 2025–2026 (Document Complet)', 'assets/docs/carte-avantage-2025-2026.png', 'assets/docs/carte-avantage-thomas-2025-2026.pdf', '29090108799317681')">
+                📄 Carte complète
+              </button>
+              <a class="pass-btn" href="assets/docs/carte-avantage-thomas-2025-2026.pdf" target="_blank" rel="noopener">
+                ⬇️ PDF
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARTE 2 : SNCF AVANTAGE RENOUVELÉE 2026-2027 -->
+        <div class="pass-card pass-sncf-next">
+          <div>
+            <div class="pass-top">
+              <div>
+                <div class="pass-issuer">TGV INOUI • Renouvellement Déjà Payé</div>
+                <div class="pass-title">Carte Avantage Adulte 2026–2027</div>
+              </div>
+              <span class="pass-status-pill future">⏳ Dès le 26/12/2026</span>
+            </div>
+            <div class="pass-middle">
+              <div class="pass-number-box" onclick="copyText('29090108799317681', 'N° Carte Avantage SNCF copié !')">
+                <div class="pass-number-label">
+                  <span>Même N° Carte • Nouveau Dossier CVOGOZ</span>
+                  <span>📋 Copier</span>
+                </div>
+                <div class="pass-number-value">290901 08 799317681</div>
+              </div>
+              <div class="pass-qr-thumb" onclick="openDocModal('Carte Avantage Adulte 2026–2027 (QR Contrôleur)', 'assets/docs/qr-avantage-2026-2027.png', 'assets/docs/carte-avantage-thomas-2026-2027.pdf', '29090108799317681')" title="Afficher le QR Code 2026-2027">
+                <img src="assets/docs/qr-avantage-2026-2027.png" alt="QR SNCF 2026-2027" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="pass-meta-grid">
+              <div class="pass-meta-item">
+                <span>Validité</span>
+                <strong>26/12/26 → 26/12/27</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Dossier / TCN</span>
+                <strong>CVOGOZ / 349971075</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Achetée le</span>
+                <strong>29/09/2026 (49 €)</strong>
+              </div>
+            </div>
+            <div class="pass-actions">
+              <button class="pass-btn" onclick="openDocModal('Carte Avantage Adulte 2026–2027 (QR Contrôleur)', 'assets/docs/qr-avantage-2026-2027.png', 'assets/docs/carte-avantage-thomas-2026-2027.pdf', '29090108799317681')">
+                🔍 QR 2026–2027
+              </button>
+              <button class="pass-btn" onclick="openDocModal('Carte Avantage 2026–2027 (Document Complet)', 'assets/docs/carte-avantage-2026-2027.png', 'assets/docs/carte-avantage-thomas-2026-2027.pdf', '29090108799317681')">
+                📄 Carte complète
+              </button>
+              <a class="pass-btn" href="assets/docs/carte-avantage-thomas-2026-2027.pdf" target="_blank" rel="noopener">
+                ⬇️ PDF
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARTE 3 : AIR FRANCE WEEK-END+ THOMAS -->
+        <div class="pass-card pass-af">
+          <div>
+            <div class="pass-top">
+              <div>
+                <div class="pass-issuer">Air France • Tarif Week-End+</div>
+                <div class="pass-title">Carte Week-End+ • Thomas Lefèvre</div>
+              </div>
+              <span class="pass-status-pill future">✈️ 08/05/27 → 07/05/28</span>
+            </div>
+            <div class="pass-middle">
+              <div class="pass-number-box" onclick="copyText('912766841', 'N° Carte Week-End+ Thomas (912766841) copié !')">
+                <div class="pass-number-label">
+                  <span>N° Carte Air France Week-End+</span>
+                  <span>📋 Copier</span>
+                </div>
+                <div class="pass-number-value">912 766 841</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="pass-meta-grid">
+              <div class="pass-meta-item">
+                <span>Validité 12 mois</span>
+                <strong>08/05/27 → 07/05/28</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Bagages inclus</span>
+                <strong>1 Cabine + 1 Soute</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Réduction</span>
+                <strong>Jusqu'à -30% A/R</strong>
+              </div>
+            </div>
+            <div class="pass-actions">
+              <button class="pass-btn" onclick="copyText('912766841', 'N° Carte Week-End+ Thomas copié !')">
+                📋 Copier 912766841
+              </button>
+              <button class="pass-btn" onclick="openDocModal('Air France Carte Week-End+ • Thomas Lefèvre', 'assets/docs/carte-we-thomas.png', null, '912766841')">
+                🖼️ Voir Justificatif
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARTE 4 : AIR FRANCE WEEK-END+ MARIE -->
+        <div class="pass-card pass-af-marie">
+          <div>
+            <div class="pass-top">
+              <div>
+                <div class="pass-issuer">Air France • Tarif Week-End+</div>
+                <div class="pass-title">Carte Week-End+ • Marie Parizot</div>
+              </div>
+              <span class="pass-status-pill future">✈️ 08/05/27 → 07/05/28</span>
+            </div>
+            <div class="pass-middle">
+              <div class="pass-number-box" onclick="copyText('912766896', 'N° Carte Week-End+ Marie (912766896) copié !')">
+                <div class="pass-number-label">
+                  <span>N° Carte Air France Week-End+ (Marie)</span>
+                  <span>📋 Copier</span>
+                </div>
+                <div class="pass-number-value">912 766 896</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="pass-meta-grid">
+              <div class="pass-meta-item">
+                <span>Validité 12 mois</span>
+                <strong>08/05/27 → 07/05/28</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Bagages inclus</span>
+                <strong>1 Cabine + 1 Soute</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Titulaire</span>
+                <strong>Marie PARIZOT</strong>
+              </div>
+            </div>
+            <div class="pass-actions">
+              <button class="pass-btn" onclick="copyText('912766896', 'N° Carte Week-End+ Marie copié !')">
+                📋 Copier 912766896
+              </button>
+              <button class="pass-btn" onclick="openDocModal('Air France Carte Week-End+ • Marie Parizot', 'assets/docs/carte-we-marie.png', null, '912766896')">
+                🖼️ Voir Justificatif
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARTE 5 : FLYING BLUE THOMAS -->
+        <div class="pass-card pass-fb">
+          <div>
+            <div class="pass-top">
+              <div>
+                <div class="pass-issuer">Air France • KLM • SkyTeam</div>
+                <div class="pass-title">Flying Blue • Thomas Lefèvre</div>
+              </div>
+              <span class="pass-status-pill">3 575 Miles</span>
+            </div>
+            <div class="pass-middle">
+              <div class="pass-number-box" onclick="copyText('1137477046', 'N° Flying Blue (1137477046) copié !')">
+                <div class="pass-number-label">
+                  <span>N° Membre Flying Blue</span>
+                  <span>📋 Copier</span>
+                </div>
+                <div class="pass-number-value">1137 477 046</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="pass-meta-grid">
+              <div class="pass-meta-item">
+                <span>Statut</span>
+                <strong>Explorer</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Solde (15/10/26)</span>
+                <strong>3 575 Miles</strong>
+              </div>
+              <div class="pass-meta-item">
+                <span>Ancienne WE+</span>
+                <strong>910960616 (exp.)</strong>
+              </div>
+            </div>
+            <div class="pass-actions">
+              <button class="pass-btn" onclick="copyText('1137477046', 'N° Flying Blue copié !')">
+                📋 Copier N° 1137477046
+              </button>
+              <a class="pass-btn" href="https://wwws.airfrance.fr/" target="_blank" rel="noopener">
+                🌐 Espace Air France
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2 : PROCHAINES VACANCES & VOYAGES ==================== -->
+    <section id="view-trips" class="app-view">
+      <div class="section-head">
+        <div>
+          <h2>🗓️ Prochaines Vacances, Voyages &amp; Déplacements</h2>
+          <p>Synchronisé avec tes mails SNCF / Air France, les messages de Nicolas &amp; Marie et l'agenda Cochin.</p>
+        </div>
+        <div class="filter-pills">
+          <button class="pill-btn active" onclick="filterTrips('upcoming', this)">À venir (5)</button>
+          <button class="pill-btn" onclick="filterTrips('past', this)">Passés &amp; Archives 2025–2026 (6)</button>
+          <button class="pill-btn" onclick="filterTrips('all', this)">Tous</button>
+        </div>
+      </div>
+
+      <div class="trips-list" id="trips-container"></div>
+    </section>
+
+    <!-- ==================== VIEW 3 : GUICHET EXPRESS (ACHAT BILLETS & RÉSERVATIONS) ==================== -->
+    <section id="view-booking" class="app-view">
+      <div class="section-head">
+        <div>
+          <h2>⚡ Guichet Express • Acheter mes Billets &amp; Réserver en 1 Clic</h2>
+          <p>Choisis un trajet favori ou tes dates : l'application vérifie automatiquement tes gardes Cochin, les gardes de Marie et prépare tes numéros de cartes.</p>
+        </div>
+      </div>
+
+      <div class="booking-hub">
+        <div class="autofill-title">
+          <span>🎯 Trajets &amp; Séjours Pré-configurés (1-Tap)</span>
+        </div>
+        <div class="preset-chips">
+          <button class="preset-chip active" onclick="applyBookingPreset('ajaccio-mai-2027', this)">
+            ✈️ Ajaccio Bergerie (13–17 Mai 2027)
+          </button>
+          <button class="preset-chip" onclick="applyBookingPreset('valence-dec-2026', this)">
+            🚄 Valence TGV • Masterclass Cryo (3–4 Déc. 2026)
+          </button>
+          <button class="preset-chip" onclick="applyBookingPreset('valloire-noel-2026', this)">
+            🏔️ Valloire • Noël en Famille (28 Déc. – 3 Jan.)
+          </button>
+          <button class="preset-chip" onclick="applyBookingPreset('strasbourg-nov-2026', this)">
+            🚄 Strasbourg • Séminaire IRM/TDM (13–14 Nov. 2026)
+          </button>
+          <button class="preset-chip" onclick="applyBookingPreset('normandie-we', this)">
+            🌊 Trouville / Deauville / Étretat (Week-end)
+          </button>
+          <button class="preset-chip" onclick="applyBookingPreset('marseille-we', this)">
+            ☀️ Marseille St-Charles (TGV INOUI)
+          </button>
+        </div>
+
+        <!-- FORMULAIRE CONFIGURATEUR -->
+        <div class="form-grid">
+          <div class="field-group">
+            <label for="bk-mode">Mode de transport / séjour</label>
+            <select id="bk-mode" class="field-select" onchange="updateBookingHub()">
+              <option value="flight">✈️ Vol (Air France / Google Flights)</option>
+              <option value="train">🚄 Train (SNCF Connect / Trainline)</option>
+              <option value="hotel">🏨 Hôtel / Airbnb / Booking</option>
+              <option value="car">🚗 Location voiture (Sixt / Rentalcars)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="bk-from">Départ (Gare / Aéroport)</label>
+            <input id="bk-from" type="text" class="field-input" value="Paris Orly (ORY)" oninput="updateBookingHub()" />
+          </div>
+          <div class="field-group">
+            <label for="bk-to">Destination</label>
+            <input id="bk-to" type="text" class="field-input" value="Ajaccio (AJA)" oninput="updateBookingHub()" />
+          </div>
+          <div class="field-group">
+            <label for="bk-start">Date Aller / Check-in</label>
+            <input id="bk-start" type="date" class="field-input" value="2027-05-13" onchange="updateBookingHub()" />
+          </div>
+          <div class="field-group">
+            <label for="bk-end">Date Retour / Check-out</label>
+            <input id="bk-end" type="date" class="field-input" value="2027-05-17" onchange="updateBookingHub()" />
+          </div>
+          <div class="field-group">
+            <label for="bk-pax">Voyageurs &amp; Cartes</label>
+            <select id="bk-pax" class="field-select" onchange="updateBookingHub()">
+              <option value="couple" selected>👫 Thomas + Marie (2 adultes • Cartes WE+ / Avantage)</option>
+              <option value="family">👨‍👩‍👦 Thomas + Marie + Émile (2 adultes + 1 bébé)</option>
+              <option value="solo">🙋‍♂️ Thomas seul (1 adulte • Carte Avantage / WE+)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- VÉRIFICATEUR AUTOMATIQUE DE CONFLITS GARDES COCHIN & MARIE -->
+        <div id="conflict-alert-box" class="conflict-box conflict-ok"></div>
+
+        <!-- BARRE COPIE EXPRESS PASSAGERS & CARTES -->
+        <div class="autofill-bar">
+          <div class="autofill-title">
+            <span>📋 Copie 1-Clic pour le paiement (cliquer pour copier dans le presse-papiers)</span>
+            <span id="active-discount-hint" style="color: var(--primary);">Carte Week-End+ active</span>
+          </div>
+          <div class="autofill-chips">
+            <button class="copy-chip" onclick="copyText('29090108799317681', 'Carte Avantage SNCF Thomas copiée !')">
+              🚄 SNCF Avantage Thomas : <code>29090108799317681</code>
+            </button>
+            <button class="copy-chip" onclick="copyText('912766841', 'Carte Week-End+ Thomas copiée !')">
+              ✈️ AF Week-End+ Thomas : <code>912766841</code>
+            </button>
+            <button class="copy-chip" onclick="copyText('912766896', 'Carte Week-End+ Marie copiée !')">
+              ✈️ AF Week-End+ Marie : <code>912766896</code>
+            </button>
+            <button class="copy-chip" onclick="copyText('1137477046', 'N° Flying Blue Thomas copié !')">
+              🌐 Flying Blue Thomas : <code>1137477046</code>
+            </button>
+            <button class="copy-chip" onclick="copyText('thomaslefevre18@live.fr', 'Email Thomas copié !')">
+              ✉️ <code>thomaslefevre18@live.fr</code>
+            </button>
+            <button class="copy-chip" onclick="copyText('marie.parizot.94@gmail.com', 'Email Marie copié !')">
+              ✉️ <code>marie.parizot.94@gmail.com</code>
+            </button>
+          </div>
+        </div>
+
+        <!-- LANCEURS DIRECTS DYNAMIQUES -->
+        <div class="autofill-title">
+          <span>🚀 Ouvrir directement la réservation pré-paramétrée</span>
+        </div>
+        <div class="providers-grid" id="provider-links-grid"></div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4 : CHECK-LIST ÉMILE & OUTILS ==================== -->
+    <section id="view-tools" class="app-view">
+      <div class="section-head">
+        <div>
+          <h2>🎒 Check-list Bagages (Spécial Émile &amp; Famille) &amp; Import Rapide</h2>
+          <p>Pour ne rien oublier avant le départ (lait, probiotiques, carnet de santé, cartes et chargeurs).</p>
+        </div>
+        <button class="btn-secondary" onclick="resetChecklist()">↺ Réinitialiser la check-list</button>
+      </div>
+
+      <div class="two-col">
+        <div class="panel-card">
+          <h3 style="margin:0 0 6px; font-size:16px;">👶 Sac d'Émile &amp; Indispensables Parents</h3>
+          <p style="margin:0 0 12px; font-size:12.5px; color:var(--text-muted);">Inspiré de vos derniers voyages (Marseille, Étretat, Cerza, Valloire).</p>
+          <div id="checklist-container"></div>
+        </div>
+
+        <div class="panel-card">
+          <h3 style="margin:0 0 6px; font-size:16px;">📩 Coller une confirmation (Mail SNCF / Air France / SMS)</h3>
+          <p style="margin:0 0 12px; font-size:12.5px; color:var(--text-muted);">
+            Colle ici le texte d'un mail ou SMS de billet (ex: <em>"Votre voyage Paris - Valence, Dossier AB12CD, Voiture 4 Place 62"</em>) pour l'extraire et l'ajouter instantanément à tes voyages.
+          </p>
+          <textarea id="paste-mail-input" class="field-input" rows="5" style="width:100%; resize:vertical; margin-bottom:10px;" placeholder="Collez ici un mail SNCF Connect, Air France, Transavia, Booking ou un message de Papa..."></textarea>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn-primary" onclick="parsePastedConfirmation()">✨ Extraire &amp; Ajouter aux voyages</button>
+            <button class="btn-secondary" onclick="openModalAddTrip()">＋ Saisie manuelle complète</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL VISIONNEUSE DE CARTE / BILLET OFFICIEL -->
+  <div class="modal-backdrop" id="doc-modal" onclick="if(event.target===this) closeDocModal()">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 id="doc-modal-title">Document de voyage</h3>
+        <button class="icon-btn" onclick="closeDocModal()">✕ Fermer</button>
+      </div>
+      <div class="modal-img-wrap">
+        <img id="doc-modal-img" src="" alt="Aperçu du document" />
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:space-between;">
+        <button class="btn-secondary" id="doc-modal-copy-btn" onclick="">📋 Copier le numéro</button>
+        <a class="btn-primary" id="doc-modal-pdf-btn" href="#" target="_blank" rel="noopener">⬇️ Ouvrir le PDF original</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL AJOUT MANUEL DE VOYAGE -->
+  <div class="modal-backdrop" id="add-trip-modal" onclick="if(event.target===this) closeModalAddTrip()">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3>＋ Ajouter un Voyage ou Billet</h3>
+        <button class="icon-btn" onclick="closeModalAddTrip()">✕</button>
+      </div>
+      <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="field-group" style="grid-column: span 2;">
+          <label>Titre du voyage / séjour</label>
+          <input id="new-trip-title" class="field-input" placeholder="Ex: Week-end Étretat en famille" />
+        </div>
+        <div class="field-group">
+          <label>Date de départ</label>
+          <input id="new-trip-start" type="date" class="field-input" value="2026-12-03" />
+        </div>
+        <div class="field-group">
+          <label>Date de retour</label>
+          <input id="new-trip-end" type="date" class="field-input" value="2026-12-04" />
+        </div>
+        <div class="field-group">
+          <label>Transport / Compagnie</label>
+          <input id="new-trip-carrier" class="field-input" placeholder="Ex: TGV INOUI / Air France" />
+        </div>
+        <div class="field-group">
+          <label>Réf. Dossier (PNR)</label>
+          <input id="new-trip-pnr" class="field-input" placeholder="Ex: CVOGOZ" />
+        </div>
+        <div class="field-group" style="grid-column: span 2;">
+          <label>Horaires, Voiture, Places &amp; Notes</label>
+          <input id="new-trip-notes" class="field-input" placeholder="Ex: Départ 08h42 Gare de Lyon • Voiture 12 Place 44" />
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+        <button class="btn-secondary" onclick="closeModalAddTrip()">Annuler</button>
+        <button class="btn-primary" onclick="saveManualTrip()">Enregistrer le voyage</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="nav-tab active" data-view="all" onclick="switchView('all')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Vue Globale</span>
+      </button>
+      <button class="nav-tab" data-view="wallet" onclick="switchView('wallet')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span>Mes Cartes</span>
+      </button>
+      <button class="nav-tab" data-view="trips" onclick="switchView('trips')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+        <span>Vacances</span>
+      </button>
+      <button class="nav-tab" data-view="booking" onclick="switchView('booking')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span>Réserver</span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="toast">Copié dans le presse-papiers ✓</div>
+
+  <script>
+    /* =========================================================================
+       1. DONNÉES RÉELLES EXTRAITES DES MAILS, IMESSAGES & AGENDAS DE THOMAS
+       ========================================================================= */
+    const INITIAL_TRIPS = [
+      {
+        id: "nov-2026-relais-strasbourg",
+        category: "upcoming",
+        type: "pro",
+        status: "option",
+        statusLabel: "Relais Famille / Option Séminaire",
+        title: "Relais Émile (Maman) & Option 8° Ateliers Urgences Scanner/IRM (Strasbourg)",
+        location: "Paris / Corse / Strasbourg",
+        startDate: "2026-11-12",
+        endDate: "2026-11-14",
+        dateDisplay: "Jeudi 12 nov. (soir) → Samedi 14 nov. 2026",
+        pnr: "RE2I-STRAS",
+        segments: [
+          {
+            label: "Relais Famille (iMessage Marie 14/10)",
+            depTime: "Jeu. 12/11 18h30",
+            depPlace: "Paris / Corse",
+            arrTime: "Ven. 13/11 soir",
+            arrPlace: "Maman de Thomas garde Émile",
+            details: ["Jeudi 12/11 : Journée Libéral Thomas (JDP / GSH)", "Vendredi 13/11 : Émile avec sa grand-mère"]
+          },
+          {
+            label: "Séminaire RE2I (CHU Strasbourg)",
+            depTime: "13/11 09h00",
+            depPlace: "CHU Strasbourg",
+            arrTime: "14/11 16h30",
+            arrPlace: "Urgences TDM & IRM",
+            details: ["Pr. Bierry, Pr. Laurent, Pr. Kremer", "Programme officiel PDF intégré"]
+          }
+        ],
+        notes: "Programme complet « 8° Ateliers : Les Urgences scanner et IRM » en pièce jointe PDF.",
+        docTitle: "Programme Séminaire Strasbourg (13–14 Nov. 2026)",
+        docPdf: "assets/docs/seminaire-strasbourg-nov2026.pdf",
+        bookingPreset: "strasbourg-nov-2026"
+      },
+      {
+        id: "dec-2026-valence-cryo",
+        category: "upcoming",
+        type: "pro",
+        status: "todo",
+        statusLabel: "Déplacement Pro • Train à vérifier",
+        title: "Masterclass Cryo MSK • Déplacement Valence (Jours 1 & 2)",
+        location: "Valence",
+        startDate: "2026-12-03",
+        endDate: "2026-12-04",
+        dateDisplay: "Jeudi 3 décembre → Vendredi 4 décembre 2026",
+        pnr: "Carte Avantage 29090108799317681",
+        segments: [
+          {
+            label: "Aller • Jeudi 3 déc. 2026",
+            depTime: "Matin",
+            depPlace: "Paris Gare de Lyon",
+            arrTime: "Journée + Soir",
+            arrPlace: "Valence TGV",
+            details: ["Journée hors Cochin validée", "Marie gère le dépôt et la sortie d'Émile chez Mabrouka"]
+          },
+          {
+            label: "Retour • Vendredi 4 déc. 2026",
+            depTime: "Fin d'après-midi",
+            depPlace: "Valence TGV",
+            arrTime: "Soirée",
+            arrPlace: "Paris Gare de Lyon",
+            details: ["Utiliser Carte Avantage Adulte n° 29090108799317681"]
+          }
+        ],
+        notes: "Inscrit sur l'agenda Cochin Radio B et l'agenda Famille.",
+        bookingPreset: "valence-dec-2026"
+      },
+      {
+        id: "noel-2026-valloire",
+        category: "upcoming",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Billets TGV Réservés & Congés Validés ✓",
+        title: "Vacances de Noël & Nouvel An en Famille à Valloire (Savoie)",
+        location: "Saint-Michel - Valloire",
+        startDate: "2026-12-28",
+        endDate: "2027-01-03",
+        dateDisplay: "Congés du 28 déc. 2026 au 3 janv. 2027 (Billets envoyés par Papa)",
+        pnr: "TGV 6407 / 6406",
+        segments: [
+          {
+            label: "Aller • TGV INOUI n° 6407 (1re classe)",
+            depTime: "11h34",
+            depPlace: "Paris Gare de Lyon",
+            arrTime: "15h48 (4h14)",
+            arrPlace: "Saint-Michel - Valloire",
+            details: [
+              "Voiture 13 • 1re classe",
+              "Places : 346, 355, 358, 367, 370 (Salle haute, Isolée)",
+              "Espace nurserie & Voiture bar"
+            ]
+          },
+          {
+            label: "Retour • TGV INOUI n° 6406 (2de classe)",
+            depTime: "15h06",
+            depPlace: "Saint-Michel - Valloire",
+            arrTime: "19h55 (4h49)",
+            arrPlace: "Paris Gare de Lyon",
+            details: [
+              "Voiture 7 • 2de classe",
+              "Places : 740, 741, 742, 744, 745 (Salle haute)",
+              "Espace nurserie & Prises"
+            ]
+          }
+        ],
+        notes: "Congés de fin d'année validés auprès d'Anne-Marie Fortin (mail du 30/10/2026). Marie termine sa demi-garde le 23/12 à 23h00.",
+        docTitle: "Billets TGV INOUI Paris ↔ Saint-Michel Valloire (Aller Voiture 13)",
+        docImg: "assets/docs/billet-valloire-aller.png",
+        docImg2: "assets/docs/billet-valloire-retour.png"
+      },
+      {
+        id: "fev-2027-seminaire",
+        category: "upcoming",
+        type: "pro",
+        status: "option",
+        statusLabel: "Inscrit Agenda",
+        title: "Séminaire / Congrès Radiologie (26 & 27 février 2027)",
+        location: "Paris / Déplacement",
+        startDate: "2027-02-26",
+        endDate: "2027-02-27",
+        dateDisplay: "Vendredi 26 → Samedi 27 février 2027 (08h30 – 18h00)",
+        pnr: "AGENDA-2027",
+        segments: [
+          {
+            label: "Séminaire 2 jours",
+            depTime: "26/02 08h30",
+            depPlace: "Après garde de nuit du 25/02",
+            arrTime: "27/02 18h00",
+            arrPlace: "Séminaire",
+            details: ["Garde de nuit Cochin le jeudi 25/02/2027"]
+          }
+        ],
+        notes: "Synchronisé depuis l'agenda familial."
+      },
+      {
+        id: "mai-2027-ajaccio-bergerie",
+        category: "upcoming",
+        type: "family",
+        status: "todo",
+        statusLabel: "⚡ Billets Thomas & Marie à prendre (Cartes WE+ prêtes)",
+        title: "Week-end Inauguration de la Bergerie en Famille • Ajaccio (Corse)",
+        location: "Ajaccio (Corse)",
+        startDate: "2027-05-13",
+        endDate: "2027-05-17",
+        dateDisplay: "Jeudi 13 mai → Lundi 17 mai 2027 (4 nuits)",
+        pnr: "Cartes WE+ 912766841 & 912766896",
+        segments: [
+          {
+            label: "Vol Aller Air France (Horaires Arthur, Matt & Papa)",
+            depTime: "Jeu. 13/05 • 21h50",
+            depPlace: "Paris Orly 3 (ORY)",
+            arrTime: "23h30",
+            arrPlace: "Ajaccio Campo Dell'Oro (AJA)",
+            details: [
+              "Tarif Carte Week-End+ (-30%, échangeable/annulable)",
+              "1 bagage cabine + 1 bagage soute 23 kg inclus par carte"
+            ]
+          },
+          {
+            label: "Vol Retour Air France (Horaires Arthur, Matt & Papa)",
+            depTime: "Lun. 17/05 • 09h30",
+            depPlace: "Ajaccio (AJA)",
+            arrTime: "11h10",
+            arrPlace: "Paris Orly (ORY)",
+            details: [
+              "Carte WE+ Thomas : 912766841",
+              "Carte WE+ Marie : 912766896"
+            ]
+          }
+        ],
+        notes: "Mail de Nicolas Lefèvre (17/10/2026) : « Peux-tu prendre tes billets ce week-end (moins cher), je te rembourse billet et carte ensuite ».",
+        bookingPreset: "ajaccio-mai-2027",
+        urgent: true
+      },
+
+      /* --- VOYAGES PASSÉS / ARCHIVES 2025-2026 --- */
+      {
+        id: "aout-2026-normandie-cerza",
+        category: "past",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Souvenir Famille ✓",
+        title: "Vacances d'Été : Étretat, Cerza Safari Lodge & Dieppe",
+        location: "Normandie (Étretat / Lisieux / Dieppe)",
+        startDate: "2026-08-13",
+        endDate: "2026-08-22",
+        dateDisplay: "Mi-août 2026",
+        pnr: "NORMANDIE-26",
+        segments: [
+          {
+            label: "Séjour Normandie & Zoo de Cerza",
+            depTime: "Août 2026",
+            depPlace: "Étretat & Cerza Safari Lodge",
+            arrTime: "2 nuits",
+            arrPlace: "Dieppe",
+            details: ["Maison familiale à Étretat", "Cerza Safari Lodge (wallabies & biquettes avec Émile)"]
+          }
+        ],
+        notes: "Vacances d'août 2026 après Marseille."
+      },
+      {
+        id: "aout-2026-marseille",
+        category: "past",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Terminé ✓",
+        title: "Séjour Marseille en Famille (TGV INOUI)",
+        location: "Marseille (1 rue Giay, 13007)",
+        startDate: "2026-08-08",
+        endDate: "2026-08-12",
+        dateDisplay: "Samedi 8 août → Mercredi 12 août 2026",
+        pnr: "H2DL57 / GGK5G8",
+        segments: [
+          {
+            label: "TGV INOUI Paris ↔ Marseille St-Charles",
+            depTime: "08/08/2026",
+            depPlace: "Paris Gare de Lyon",
+            arrTime: "12/08/2026",
+            arrPlace: "Marseille Saint-Charles",
+            details: ["Dossiers SNCF : H2DL57 & GGK5G8", "Adresse : 1 rue Giay, 13007 Marseille"]
+          }
+        ],
+        notes: "Billets SNCF Connect avec Carte Avantage."
+      },
+      {
+        id: "juil-2026-deauville",
+        category: "past",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Terminé ✓",
+        title: "Week-end Trouville - Deauville (SNCF Nomad Train)",
+        location: "Trouville - Deauville",
+        startDate: "2026-07-24",
+        endDate: "2026-07-26",
+        dateDisplay: "Vendredi 24 juillet → Dimanche 26 juillet 2026",
+        pnr: "BRMVVR / FE63BT",
+        segments: [
+          {
+            label: "Aller • Train NOMAD 3391 (24/07)",
+            depTime: "20h08",
+            depPlace: "Paris Saint-Lazare",
+            arrTime: "22h20",
+            arrPlace: "Trouville - Deauville",
+            details: ["Dossier FE63BT : Marie Voiture 5 Place 42 (2de)"]
+          },
+          {
+            label: "Retour • Train NOMAD 3388 (26/07)",
+            depTime: "21h19",
+            depPlace: "Trouville - Deauville",
+            arrTime: "23h30",
+            arrPlace: "Paris Saint-Lazare",
+            details: ["Dossier BRMVVR : Thomas Voiture 6 Place 51 (2de)"]
+          }
+        ],
+        notes: "Week-end en Normandie."
+      },
+      {
+        id: "mai-2026-corfou",
+        category: "past",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Terminé ✓",
+        title: "Vacances à Corfou (Grèce) • Transavia & Sixt",
+        location: "Corfou (CFU)",
+        startDate: "2026-05-23",
+        endDate: "2026-05-30",
+        dateDisplay: "Samedi 23 mai → Samedi 30 mai 2026",
+        pnr: "XCKW2M / Sixt #9732939605",
+        segments: [
+          {
+            label: "Aller • Transavia TO3548 (23/05)",
+            depTime: "13h35",
+            depPlace: "Paris Orly (ORY)",
+            arrTime: "17h20",
+            arrPlace: "Corfou (CFU)",
+            details: ["Dossier Transavia : XCKW2M (avec Ambroise & Camille)"]
+          },
+          {
+            label: "Retour • Transavia TO3545 (30/05)",
+            depTime: "12h10",
+            depPlace: "Corfou (CFU)",
+            arrTime: "14h05",
+            arrPlace: "Paris Orly (ORY)",
+            details: ["Location voiture Sixt Corfou Aéroport #9732939605"]
+          }
+        ],
+        notes: "Voyage en Grèce avec Marie, Émile, Ambroise David et Camille Colle."
+      },
+      {
+        id: "mai-2026-bandol",
+        category: "past",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Terminé ✓",
+        title: "Week-end du 1er Mai • Marseille & Bandol",
+        location: "Bandol / Marseille",
+        startDate: "2026-04-30",
+        endDate: "2026-05-03",
+        dateDisplay: "Jeudi 30 avril → Dimanche 3 mai 2026",
+        pnr: "A5KFN6",
+        segments: [
+          {
+            label: "TGV / OUIGO Paris ↔ Marseille / Bandol",
+            depTime: "30/04/2026",
+            depPlace: "Paris Gare de Lyon",
+            arrTime: "03/05/2026",
+            arrPlace: "Bandol / Marseille",
+            details: ["Dossier SNCF Connect : A5KFN6"]
+          }
+        ],
+        notes: "Pont du 1er mai dans le Sud."
+      },
+      {
+        id: "mars-2026-marbella",
+        category: "past",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Terminé ✓",
+        title: "Séjour Marbella / Malaga (Espagne) • Vueling",
+        location: "Malaga / Marbella (AGP)",
+        startDate: "2026-03-26",
+        endDate: "2026-03-29",
+        dateDisplay: "Jeudi 26 mars → Dimanche 29 mars 2026",
+        pnr: "KL14HG",
+        segments: [
+          {
+            label: "Vols Vueling ORY ↔ AGP",
+            depTime: "26/03/2026",
+            depPlace: "Paris Orly (ORY)",
+            arrTime: "29/03/2026 (17h40)",
+            arrPlace: "Malaga (AGP)",
+            details: ["Référence Vueling : KL14HG"]
+          }
+        ],
+        notes: "Vacances de mars à Marbella."
+      }
+    ];
+
+    /* PLANNING DES GARDES & ÉVÉNEMENTS (POUR LE DÉTECTEUR DE CONFLITS) */
+    const FAMILY_BUSY_DATES = [
+      { date: "2026-11-07", who: "Marie", type: "garde", label: "Garde Marie aux urgences (09h00 – 21h00)" },
+      { date: "2026-11-11", who: "Mabrouka", type: "férié", label: "Jour férié (Armistice) — Mabrouka indisponible" },
+      { date: "2026-11-12", who: "Thomas", type: "liberal", label: "Journée Libéral Thomas (JDP / GSH) + Relais Maman de Thomas dès 18h30" },
+      { date: "2026-11-13", who: "Famille", type: "relais", label: "Relais Émile avec la Maman de Thomas toute la journée" },
+      { date: "2026-11-17", who: "Marie", type: "garde", label: "Garde complète 24h Marie (et vacation AG Thomas à 11h)" },
+      { date: "2026-11-19", who: "Thomas", type: "garde", label: "Garde de nuit Thomas à Cochin (18h30 – 08h30)" },
+      { date: "2026-11-21", who: "Marie", type: "formation", label: "Formation étudiants Marie dès 07h30" },
+      { date: "2026-11-26", who: "Thomas", type: "formation", label: "Masterclass OsteoCool Medtronic (Paris)" },
+      { date: "2026-11-28", who: "Thomas", type: "garde", label: "Garde 24h Thomas à Cochin (Samedi)" },
+      { date: "2026-12-03", who: "Thomas", type: "pro", label: "Déplacement Thomas : Masterclass Cryo MSK à Valence (Jour 1)" },
+      { date: "2026-12-04", who: "Thomas", type: "pro", label: "Déplacement Thomas : Masterclass Cryo MSK à Valence (Jour 2)" },
+      { date: "2026-12-12", who: "Thomas", type: "formation", label: "20e J.A.E Échographie SIMS (Salons de l'Aveyron, Paris 12e)" },
+      { date: "2026-12-17", who: "Marie", type: "garde", label: "Garde complète 24h Marie" },
+      { date: "2026-12-21", who: "Thomas", type: "garde", label: "Garde de nuit Thomas à Cochin" },
+      { date: "2026-12-23", who: "Marie", type: "garde", label: "Demi-garde Marie jusqu'à 23h00" },
+      { date: "2026-12-28", who: "Famille", type: "conges", label: "Congés de fin d'année validés (28/12 au 03/01 — Valloire)" },
+      { date: "2026-12-29", who: "Famille", type: "conges", label: "Congés de fin d'année validés (Valloire)" },
+      { date: "2026-12-30", who: "Famille", type: "conges", label: "Congés de fin d'année validés (Valloire)" },
+      { date: "2026-12-31", who: "Famille", type: "conges", label: "Congés de fin d'année validés (Valloire)" },
+      { date: "2027-01-01", who: "Famille", type: "conges", label: "Jour de l'An — Congés validés (Valloire)" },
+      { date: "2027-02-06", who: "Thomas", type: "garde", label: "Garde 24h Thomas à Cochin (Samedi)" },
+      { date: "2027-02-25", who: "Thomas", type: "garde", label: "Garde de nuit Thomas à Cochin" },
+      { date: "2027-02-26", who: "Thomas", type: "formation", label: "Séminaire / Congrès Thomas (26–27 février)" },
+      { date: "2027-02-27", who: "Thomas", type: "formation", label: "Séminaire / Congrès Thomas (26–27 février)" },
+      { date: "2027-04-14", who: "Thomas", type: "garde", label: "Garde de nuit Thomas à Cochin" },
+      { date: "2027-05-13", who: "Famille", type: "conges", label: "Départ Week-end Famille Ajaccio (Vol 21h50 Orly 3)" },
+      { date: "2027-05-17", who: "Famille", type: "conges", label: "Retour Week-end Famille Ajaccio (Vol 09h30)" }
+    ];
+
+    const BOOKING_PRESETS = {
+      "ajaccio-mai-2027": {
+        mode: "flight",
+        from: "Paris Orly (ORY)",
+        to: "Ajaccio (AJA)",
+        fromCode: "ORY",
+        toCode: "AJA",
+        start: "2027-05-13",
+        end: "2027-05-17",
+        pax: "couple",
+        discountHint: "Cartes Air France Week-End+ actives (912766841 & 912766896) • Vol aller 21h50 / retour 09h30"
+      },
+      "valence-dec-2026": {
+        mode: "train",
+        from: "Paris Gare de Lyon",
+        to: "Valence TGV Rhône-Alpes Sud",
+        fromCode: "Paris",
+        toCode: "Valence TGV",
+        start: "2026-12-03",
+        end: "2026-12-04",
+        pax: "solo",
+        discountHint: "Carte Avantage Adulte SNCF active (29090108799317681) • Masterclass Cryo MSK"
+      },
+      "valloire-noel-2026": {
+        mode: "train",
+        from: "Paris Gare de Lyon",
+        to: "Saint-Michel - Valloire",
+        fromCode: "Paris",
+        toCode: "Saint-Michel Valloire",
+        start: "2026-12-28",
+        end: "2027-01-03",
+        pax: "family",
+        discountHint: "Billets TGV 6407 / 6406 déjà pris par Papa • Carte Avantage renouvelée (CVOGOZ) dès le 26/12"
+      },
+      "strasbourg-nov-2026": {
+        mode: "train",
+        from: "Paris Gare de l'Est",
+        to: "Strasbourg",
+        fromCode: "Paris Est",
+        toCode: "Strasbourg",
+        start: "2026-11-13",
+        end: "2026-11-14",
+        pax: "solo",
+        discountHint: "Carte Avantage Adulte SNCF active (29090108799317681) • 8° Ateliers Urgences TDM/IRM"
+      },
+      "normandie-we": {
+        mode: "train",
+        from: "Paris Saint-Lazare",
+        to: "Trouville - Deauville",
+        fromCode: "Paris St-Lazare",
+        toCode: "Trouville-Deauville",
+        start: "2026-11-14",
+        end: "2026-11-15",
+        pax: "family",
+        discountHint: "Carte Avantage Adulte SNCF (-30% pour Thomas + Marie accompagnante + Émile)"
+      },
+      "marseille-we": {
+        mode: "train",
+        from: "Paris Gare de Lyon",
+        to: "Marseille Saint-Charles",
+        fromCode: "Paris Gare de Lyon",
+        toCode: "Marseille St-Charles",
+        start: "2027-03-19",
+        end: "2027-03-21",
+        pax: "family",
+        discountHint: "Carte Avantage Adulte 2026–2027 (29090108799317681)"
+      }
+    };
+
+    const DEFAULT_CHECKLIST = [
+      { id: "ck-1", group: "👶 Sac d'Émile", label: "Boîte de lait + biberons (vérifier stock avant départ !)", done: false },
+      { id: "ck-2", group: "👶 Sac d'Émile", label: "Probiotiques, Doliprane pédiatrique, sérum phy & carnet de santé", done: false },
+      { id: "ck-3", group: "👶 Sac d'Émile", label: "Doudou, tétines, petits livres/magazines pour le train ou l'avion", done: false },
+      { id: "ck-4", group: "👶 Sac d'Émile", label: "Turbulette, couches, lingettes & tenue de rechange en cabine", done: false },
+      { id: "ck-5", group: "🪪 Papiers & Cartes", label: "Pièces d'identité (Thomas, Marie & Émile) + Carte Vitale", done: true },
+      { id: "ck-6", group: "🪪 Papiers & Cartes", label: "Carte Avantage SNCF (29090108799317681) & Cartes AF Week-End+ dans l'app", done: true },
+      { id: "ck-7", group: "🔌 Tech & Pratique", label: "Chargeurs iPhone / Mac, batterie externe & écouteurs", done: false },
+      { id: "ck-8", group: "🔌 Tech & Pratique", label: "Clés maison / Étretat / Bergerie + prévenir Mabrouka des horaires", done: false }
+    ];
+
+    /* =========================================================================
+       2. ÉTAT LOCAL & RENDU DES VOYAGES
+       ========================================================================= */
+    let currentTripFilter = "upcoming";
+
+    function getTrips() {
+      try {
+        const custom = JSON.parse(localStorage.getItem("vv_custom_trips_v1") || "[]");
+        return [...custom, ...INITIAL_TRIPS];
+      } catch (_) {
+        return INITIAL_TRIPS;
+      }
+    }
+
+    function daysUntil(isoDate) {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const target = new Date(isoDate + "T00:00:00");
+      const diff = Math.round((target - now) / (1000 * 60 * 60 * 24));
+      if (diff < 0) return `Il y a ${Math.abs(diff)} j`;
+      if (diff === 0) return "Aujourd'hui !";
+      if (diff === 1) return "Demain !";
+      return `J-${diff}`;
+    }
+
+    function renderTrips() {
+      const container = document.getElementById("trips-container");
+      if (!container) return;
+      const all = getTrips();
+      const filtered = all.filter(t => currentTripFilter === "all" || t.category === currentTripFilter);
+
+      container.innerHTML = filtered.map(t => {
+        const cd = daysUntil(t.startDate);
+        const statusCls = t.status === "confirmed" ? "badge-confirmed" : "badge-todo";
+        const typeCls = t.type === "pro" ? "badge-pro" : "badge-family";
+        const typeLbl = t.type === "pro" ? "🩺 Congrès / Pro" : "👨‍👩‍👦 Famille & Vacances";
+        const cardHighlight = t.urgent ? "highlight-urgent" : (t.status === "confirmed" ? "highlight-confirmed" : "");
+
+        const segmentsHtml = (t.segments || []).map(s => `
+          <div class="segment-item">
+            <div class="segment-head">
+              <span>${s.label}</span>
+            </div>
+            <div class="segment-route">
+              <div>
+                <div style="color:var(--primary); font-size:12px;">${s.depTime}</div>
+                <div>${s.depPlace}</div>
+              </div>
+              <div style="color:var(--text-muted); font-weight:400;">→</div>
+              <div style="text-align:right;">
+                <div style="color:var(--primary); font-size:12px;">${s.arrTime}</div>
+                <div>${s.arrPlace}</div>
+              </div>
+            </div>
+            <div class="segment-seats">
+              ${(s.details || []).map(d => `<span class="seat-chip">${d}</span>`).join("")}
+            </div>
+          </div>
+        `).join("");
+
+        let btnsHtml = "";
+        if (t.docImg) {
+          btnsHtml += `<button class="btn-secondary" onclick="openDocModal('${t.docTitle || t.title} (Aller)', '${t.docImg}', null, '${t.pnr || ''}')">🎫 Billet Aller (Voiture 13)</button>`;
+        }
+        if (t.docImg2) {
+          btnsHtml += `<button class="btn-secondary" onclick="openDocModal('${t.docTitle || t.title} (Retour)', '${t.docImg2}', null, '${t.pnr || ''}')">🎫 Billet Retour (Voiture 7)</button>`;
+        }
+        if (t.docPdf) {
+          btnsHtml += `<a class="btn-secondary" href="${t.docPdf}" target="_blank" rel="noopener">📄 Programme PDF</a>`;
+        }
+        if (t.pnr) {
+          btnsHtml += `<button class="btn-secondary" onclick="copyText('${t.pnr}', 'Référence ${t.pnr} copiée !')">📋 Réf: ${t.pnr}</button>`;
+        }
+        if (t.bookingPreset) {
+          btnsHtml += `<button class="btn-primary" onclick="prefillAndJumpToBooking('${t.bookingPreset}')">⚡ Acheter / Réserver →</button>`;
+        }
+        if (t.isCustom) {
+          btnsHtml += `<button class="btn-secondary" onclick="deleteCustomTrip('${t.id}')">🗑️</button>`;
+        }
+
+        return `
+          <article class="trip-card ${cardHighlight}">
+            <div class="trip-header">
+              <div>
+                <div class="trip-badges">
+                  <span class="badge badge-countdown">⏱️ ${cd}</span>
+                  <span class="badge ${typeCls}">${typeLbl}</span>
+                  <span class="badge ${statusCls}">${t.statusLabel}</span>
+                </div>
+                <h3 class="trip-title">${t.title}</h3>
+                <div class="trip-dates">📍 ${t.location} • 🗓️ ${t.dateDisplay}</div>
+              </div>
+            </div>
+            <div class="segments-box">
+              ${segmentsHtml}
+            </div>
+            <div class="trip-footer">
+              <div class="trip-notes">💡 ${t.notes || ""}</div>
+              <div class="trip-btns">${btnsHtml}</div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function filterTrips(filter, btnEl) {
+      currentTripFilter = filter;
+      document.querySelectorAll(".filter-pills .pill-btn").forEach(b => b.classList.remove("active"));
+      if (btnEl) btnEl.classList.add("active");
+      renderTrips();
+    }
+
+    /* =========================================================================
+       3. GUICHET EXPRESS : SIMULATION, VÉRIFICATEUR DE GARDES & LIENS 1-CLIC
+       ========================================================================= */
+    function applyBookingPreset(key, chipEl) {
+      const p = BOOKING_PRESETS[key];
+      if (!p) return;
+      document.querySelectorAll(".preset-chip").forEach(c => c.classList.remove("active"));
+      if (chipEl) chipEl.classList.add("active");
+
+      document.getElementById("bk-mode").value = p.mode;
+      document.getElementById("bk-from").value = p.from;
+      document.getElementById("bk-to").value = p.to;
+      document.getElementById("bk-start").value = p.start;
+      document.getElementById("bk-end").value = p.end;
+      document.getElementById("bk-pax").value = p.pax;
+      document.getElementById("active-discount-hint").textContent = p.discountHint;
+      updateBookingHub();
+    }
+
+    function prefillAndJumpToBooking(presetKey) {
+      switchView("booking");
+      applyBookingPreset(presetKey);
+      const hub = document.querySelector(".booking-hub");
+      if (hub) hub.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function updateBookingHub() {
+      const mode = document.getElementById("bk-mode").value;
+      const from = document.getElementById("bk-from").value.trim();
+      const to = document.getElementById("bk-to").value.trim();
+      const start = document.getElementById("bk-start").value;
+      const end = document.getElementById("bk-end").value;
+      const pax = document.getElementById("bk-pax").value;
+
+      // 1. Vérifier les conflits avec les gardes de Thomas & Marie
+      const alertBox = document.getElementById("conflict-alert-box");
+      const conflicts = FAMILY_BUSY_DATES.filter(ev => {
+        if (!start) return false;
+        const endCheck = end || start;
+        return ev.date >= start && ev.date <= endCheck;
+      });
+
+      const hasGardeConflict = conflicts.some(c => c.type === "garde");
+      if (conflicts.length === 0) {
+        alertBox.className = "conflict-box conflict-ok";
+        alertBox.innerHTML = `
+          <span>✅</span>
+          <div>
+            <strong>Aucune garde Cochin ni garde de Marie détectée sur ce créneau (${start} → ${end || start}).</strong><br/>
+            <span>Créneau libre dans vos agendas synchronisés !</span>
+          </div>
+        `;
+      } else {
+        alertBox.className = "conflict-box " + (hasGardeConflict ? "conflict-warn" : "conflict-ok");
+        const itemsHtml = conflicts.map(c => `• <strong>${c.date} (${c.who})</strong> : ${c.label}`).join("<br/>");
+        alertBox.innerHTML = `
+          <span>${hasGardeConflict ? "⚠️" : "📅"}</span>
+          <div>
+            <strong>${hasGardeConflict ? "Attention : Garde hospitalière détectée sur ces dates !" : "Événements repérés dans l'agenda sur ce créneau :"}</strong><br/>
+            <span>${itemsHtml}</span>
+          </div>
+        `;
+      }
+
+      // 2. Construire les URLs dynamiques de réservation
+      const adults = pax === "solo" ? 1 : 2;
+      const children = pax === "family" ? 1 : 0;
+      const cleanToCity = to.replace(/\s*\(.*?\)/g, "").trim();
+      const cleanFromCity = from.replace(/\s*\(.*?\)/g, "").trim();
+
+      const googleFlightsUrl = `https://www.google.com/travel/flights?hl=fr&q=${encodeURIComponent(`Flights from ${from} to ${to} on ${start} through ${end}`)}`;
+      const airFranceUrl = `https://wwws.airfrance.fr/`;
+      const sncfUrl = `https://www.sncf-connect.com/app/home/search`;
+      const trainlineUrl = `https://www.thetrainline.com/fr`;
+      const bookingUrl = `https://www.booking.com/searchresults.fr.html?ss=${encodeURIComponent(cleanToCity)}&checkin=${start}&checkout=${end}&group_adults=${adults}&no_rooms=1&group_children=${children}`;
+      const airbnbUrl = `https://www.airbnb.fr/s/${encodeURIComponent(cleanToCity)}/homes?checkin=${start}&checkout=${end}&adults=${adults}&children=${children}`;
+      const sixtUrl = `https://www.sixt.fr/`;
+
+      const providers = [
+        {
+          name: "SNCF Connect",
+          sub: `Carte Avantage n° 29090108799317681`,
+          url: sncfUrl,
+          copyVal: "29090108799317681",
+          copyMsg: "N° Carte Avantage copié avant ouverture SNCF Connect !",
+          modes: ["train", "flight", "hotel", "car"]
+        },
+        {
+          name: "Trainline (TGV & OUIGO)",
+          sub: `${cleanFromCity} → ${cleanToCity}`,
+          url: trainlineUrl,
+          copyVal: "29090108799317681",
+          copyMsg: "N° Carte Avantage copié pour Trainline !",
+          modes: ["train"]
+        },
+        {
+          name: "Air France (Tarif Week-End+)",
+          sub: `Copie Carte WE+ Thomas (912766841)`,
+          url: airFranceUrl,
+          copyVal: "912766841",
+          copyMsg: "N° Carte Week-End+ (912766841) copié !",
+          modes: ["flight", "train"]
+        },
+        {
+          name: "Google Flights (Dates pré-remplies)",
+          sub: `${from} ↔ ${to} (${start})`,
+          url: googleFlightsUrl,
+          copyVal: "912766841",
+          copyMsg: "Recherche Google Flights ouverte !",
+          modes: ["flight", "train", "hotel", "car"]
+        },
+        {
+          name: "Airbnb (Dates & Voyageurs)",
+          sub: `${cleanToCity} • ${adults} ad.${children ? " + Émile" : ""}`,
+          url: airbnbUrl,
+          copyVal: "",
+          copyMsg: "",
+          modes: ["hotel", "flight", "train", "car"]
+        },
+        {
+          name: "Booking.com (Dates pré-remplies)",
+          sub: `${cleanToCity} (${start} → ${end})`,
+          url: bookingUrl,
+          copyVal: "",
+          copyMsg: "",
+          modes: ["hotel", "flight", "train", "car"]
+        },
+        {
+          name: "Sixt Location Voiture",
+          sub: `Aéroport / Gare ${cleanToCity}`,
+          url: sixtUrl,
+          copyVal: "",
+          copyMsg: "",
+          modes: ["car", "flight"]
+        }
+      ];
+
+      // Mettre en premier ceux qui correspondent au mode sélectionné
+      providers.sort((a, b) => (a.modes[0] === mode ? -1 : 1) - (b.modes[0] === mode ? -1 : 1));
+
+      const grid = document.getElementById("provider-links-grid");
+      grid.innerHTML = providers.map(p => `
+        <a class="provider-btn" href="${p.url}" target="_blank" rel="noopener" onclick="${p.copyVal ? `copyText('${p.copyVal}', '${p.copyMsg}')` : ""}">
+          <div class="provider-info">
+            <strong>${p.name}</strong>
+            <span>${p.sub}</span>
+          </div>
+          <span style="color:var(--primary); font-weight:800;">↗</span>
+        </a>
+      `).join("");
+    }
+
+    /* =========================================================================
+       4. CHECK-LIST BAGAGES & IMPORTATION INTELLIGENTE DE CONFIRMATION
+       ========================================================================= */
+    function getChecklist() {
+      try {
+        const saved = localStorage.getItem("vv_checklist_v1");
+        return saved ? JSON.parse(saved) : DEFAULT_CHECKLIST;
+      } catch (_) {
+        return DEFAULT_CHECKLIST;
+      }
+    }
+
+    function renderChecklist() {
+      const list = getChecklist();
+      const container = document.getElementById("checklist-container");
+      if (!container) return;
+      const groups = {};
+      list.forEach(item => {
+        if (!groups[item.group]) groups[item.group] = [];
+        groups[item.group].push(item);
+      });
+
+      container.innerHTML = Object.keys(groups).map(gName => `
+        <div class="checklist-group">
+          <h4>${gName}</h4>
+          ${groups[gName].map(it => `
+            <label class="check-item ${it.done ? "done" : ""}">
+              <input type="checkbox" ${it.done ? "checked" : ""} onchange="toggleCheckItem('${it.id}')" />
+              <span>${it.label}</span>
+            </label>
+          `).join("")}
+        </div>
+      `).join("");
+    }
+
+    function toggleCheckItem(id) {
+      const list = getChecklist().map(it => it.id === id ? { ...it, done: !it.done } : it);
+      localStorage.setItem("vv_checklist_v1", JSON.stringify(list));
+      renderChecklist();
+    }
+
+    function resetChecklist() {
+      localStorage.setItem("vv_checklist_v1", JSON.stringify(DEFAULT_CHECKLIST));
+      renderChecklist();
+      showToast("Check-list réinitialisée ✓");
+    }
+
+    function parsePastedConfirmation() {
+      const raw = document.getElementById("paste-mail-input").value.trim();
+      if (!raw) {
+        showToast("Colle d'abord le texte d'un mail ou SMS !");
+        return;
+      }
+      // Extraction PNR (6 caractères alphanumériques majuscules)
+      const pnrMatch = raw.match(/\b(?:dossier|référence|reference|pnrRef=|réservation\s*:?\s*)([A-Z0-9]{6})\b/i) || raw.match(/\b([A-Z0-9]{6})\b/);
+      const pnr = pnrMatch ? pnrMatch[1].toUpperCase() : "IMPORT";
+
+      // Extraction Voiture / Place
+      const voitureMatch = raw.match(/voiture\s*(\d+)/i);
+      const placeMatch = raw.match(/places?\s*(\d+(?:\s*,\s*\d+)*)/i);
+      const trainMatch = raw.match(/(?:TGV\s*INOUI|OUIGO|NOMAD|AF|TO)\s*(?:n°\s*)?(\d+)/i);
+
+      const details = [];
+      if (trainMatch) details.push(`Train/Vol ${trainMatch[0]}`);
+      if (voitureMatch) details.push(`Voiture ${voitureMatch[1]}`);
+      if (placeMatch) details.push(`Place(s) ${placeMatch[1]}`);
+      if (details.length === 0) details.push("Importé depuis Mail/SMS");
+
+      const firstLine = raw.split(/\r?\n/).find(l => l.trim().length > 4) || "Nouveau Voyage Importé";
+      const customTrip = {
+        id: "custom-" + Date.now(),
+        isCustom: true,
+        category: "upcoming",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Importé ✓",
+        title: firstLine.slice(0, 75),
+        location: "Détecté depuis votre texte",
+        startDate: new Date().toISOString().slice(0, 10),
+        endDate: new Date().toISOString().slice(0, 10),
+        dateDisplay: "Ajouté le " + new Date().toLocaleDateString("fr-FR"),
+        pnr: pnr,
+        segments: [
+          {
+            label: "Détails extraits automatiquement",
+            depTime: "Voir billet",
+            depPlace: "Départ",
+            arrTime: "Réf " + pnr,
+            arrPlace: "Arrivée",
+            details: details
+          }
+        ],
+        notes: raw.slice(0, 220)
+      };
+
+      const saved = JSON.parse(localStorage.getItem("vv_custom_trips_v1") || "[]");
+      saved.unshift(customTrip);
+      localStorage.setItem("vv_custom_trips_v1", JSON.stringify(saved));
+      document.getElementById("paste-mail-input").value = "";
+      renderTrips();
+      switchView("trips");
+      showToast("Voyage extrait et ajouté ✓");
+    }
+
+    function openModalAddTrip() {
+      document.getElementById("add-trip-modal").classList.add("open");
+    }
+    function closeModalAddTrip() {
+      document.getElementById("add-trip-modal").classList.remove("open");
+    }
+    function saveManualTrip() {
+      const title = document.getElementById("new-trip-title").value.trim() || "Nouveau voyage";
+      const start = document.getElementById("new-trip-start").value || "2026-12-03";
+      const end = document.getElementById("new-trip-end").value || start;
+      const carrier = document.getElementById("new-trip-carrier").value.trim() || "Train / Vol";
+      const pnr = document.getElementById("new-trip-pnr").value.trim() || "PERSO";
+      const notes = document.getElementById("new-trip-notes").value.trim() || "";
+
+      const customTrip = {
+        id: "custom-" + Date.now(),
+        isCustom: true,
+        category: "upcoming",
+        type: "family",
+        status: "confirmed",
+        statusLabel: "Enregistré ✓",
+        title,
+        location: carrier,
+        startDate: start,
+        endDate: end,
+        dateDisplay: `${start} → ${end}`,
+        pnr,
+        segments: [
+          {
+            label: carrier,
+            depTime: start,
+            depPlace: "Aller",
+            arrTime: end,
+            arrPlace: "Retour",
+            details: notes ? [notes] : ["Réservation ajoutée manuellement"]
+          }
+        ],
+        notes
+      };
+      const saved = JSON.parse(localStorage.getItem("vv_custom_trips_v1") || "[]");
+      saved.unshift(customTrip);
+      localStorage.setItem("vv_custom_trips_v1", JSON.stringify(saved));
+      closeModalAddTrip();
+      renderTrips();
+      showToast("Voyage ajouté avec succès ✓");
+    }
+
+    function deleteCustomTrip(id) {
+      const saved = JSON.parse(localStorage.getItem("vv_custom_trips_v1") || "[]").filter(t => t.id !== id);
+      localStorage.setItem("vv_custom_trips_v1", JSON.stringify(saved));
+      renderTrips();
+      showToast("Voyage supprimé");
+    }
+
+    /* =========================================================================
+       5. VISIONNEUSE MODAL, COPIE PRESSE-PAPIERS, NAVIGATION & THÈME
+       ========================================================================= */
+    function openDocModal(title, imgSrc, pdfHref, copyNum) {
+      document.getElementById("doc-modal-title").textContent = title;
+      document.getElementById("doc-modal-img").src = imgSrc;
+      const pdfBtn = document.getElementById("doc-modal-pdf-btn");
+      if (pdfHref) {
+        pdfBtn.href = pdfHref;
+        pdfBtn.style.display = "inline-flex";
+      } else {
+        pdfBtn.style.display = "none";
+      }
+      const copyBtn = document.getElementById("doc-modal-copy-btn");
+      if (copyNum) {
+        copyBtn.style.display = "inline-flex";
+        copyBtn.textContent = "📋 Copier " + copyNum;
+        copyBtn.onclick = () => copyText(copyNum, "Numéro " + copyNum + " copié !");
+      } else {
+        copyBtn.style.display = "none";
+      }
+      document.getElementById("doc-modal").classList.add("open");
+    }
+
+    function closeDocModal() {
+      document.getElementById("doc-modal").classList.remove("open");
+    }
+
+    function copyText(text, message) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+      if (navigator.vibrate) navigator.vibrate(12);
+      showToast(message || "Copié dans le presse-papiers ✓");
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+    }
+
+    function switchView(view) {
+      document.querySelectorAll(".nav-tab").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.view === view);
+      });
+      const sections = {
+        wallet: document.getElementById("view-wallet"),
+        trips: document.getElementById("view-trips"),
+        booking: document.getElementById("view-booking"),
+        tools: document.getElementById("view-tools")
+      };
+      if (view === "all") {
+        Object.values(sections).forEach(s => s.classList.remove("hidden-view"));
+      } else {
+        Object.entries(sections).forEach(([k, s]) => {
+          s.classList.toggle("hidden-view", k !== view);
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      localStorage.setItem("vv_theme", next);
+      document.getElementById("theme-icon").textContent = next === "dark" ? "☀️" : "🌙";
+    }
+
+    /* =========================================================================
+       6. PULL-TO-REFRESH TACTILE & SOURIS (Standard obligatoire @Mrthomaslef)
+       ========================================================================= */
+    (function initPullToRefresh() {
+      const bar = document.getElementById("ptr-bar");
+      const icon = document.getElementById("ptr-icon");
+      const text = document.getElementById("ptr-text");
+      let startY = 0;
+      let pulling = false;
+      let dist = 0;
+      const threshold = 72;
+
+      function onStart(y) {
+        if (window.scrollY > 2) return;
+        startY = y;
+        pulling = true;
+        dist = 0;
+      }
+
+      function onMove(y) {
+        if (!pulling) return;
+        const delta = y - startY;
+        if (delta <= 0 || window.scrollY > 2) {
+          dist = 0;
+          bar.style.opacity = "0";
+          bar.style.transform = "translateY(-70px)";
+          return;
+        }
+        dist = Math.min(120, Math.pow(delta, 0.82));
+        bar.style.opacity = String(Math.min(1, dist / 45));
+        bar.style.transform = `translateY(${Math.min(26, dist - 45)}px)`;
+        if (dist >= threshold) {
+          icon.style.transform = "rotate(180deg)";
+          text.textContent = "Relâcher pour actualiser";
+        } else {
+          icon.style.transform = "rotate(0deg)";
+          text.textContent = "Tirer pour actualiser";
+        }
+      }
+
+      function onEnd() {
+        if (!pulling) return;
+        pulling = false;
+        if (dist >= threshold) {
+          if (navigator.vibrate) navigator.vibrate(12);
+          icon.textContent = "↻";
+          icon.classList.add("ptr-spin");
+          text.textContent = "Actualisation...";
+          bar.style.transform = "translateY(14px)";
+          bar.style.opacity = "1";
+          setTimeout(() => {
+            renderTrips();
+            updateBookingHub();
+            renderChecklist();
+            icon.classList.remove("ptr-spin");
+            icon.textContent = "✓";
+            text.textContent = "À jour ✓";
+            setTimeout(() => {
+              bar.style.opacity = "0";
+              bar.style.transform = "translateY(-70px)";
+              setTimeout(() => { icon.textContent = "↓"; }, 200);
+            }, 650);
+          }, 550);
+        } else {
+          bar.style.opacity = "0";
+          bar.style.transform = "translateY(-70px)";
+        }
+        dist = 0;
+      }
+
+      window.addEventListener("touchstart", e => {
+        if (e.touches && e.touches.length === 1) onStart(e.touches[0].clientY);
+      }, { passive: true });
+      window.addEventListener("touchmove", e => {
+        if (pulling && e.touches && e.touches.length === 1) onMove(e.touches[0].clientY);
+      }, { passive: true });
+      window.addEventListener("touchend", onEnd);
+
+      window.addEventListener("mousedown", e => {
+        if (e.button === 0 && window.scrollY <= 2 && e.clientY < 140) onStart(e.clientY);
+      });
+      window.addEventListener("mousemove", e => {
+        if (pulling) onMove(e.clientY);
+      });
+      window.addEventListener("mouseup", onEnd);
+    })();
+
+    /* INIT */
+    (function initApp() {
+      const savedTheme = localStorage.getItem("vv_theme");
+      if (savedTheme === "light" || savedTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        document.getElementById("theme-icon").textContent = savedTheme === "dark" ? "☀️" : "🌙";
+      }
+      renderTrips();
+      updateBookingHub();
+      renderChecklist();
+    })();
+  </script>
+</body>
+</html>
