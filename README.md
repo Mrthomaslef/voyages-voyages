@@ -27,9 +27,9 @@ Application web / PWA d'organisation de voyages, portefeuille de cartes de rédu
     - **Aller (28/12)** : TGV `6407` `11h34` Paris Gare de Lyon → `15h48` St-Michel Valloire (`1re classe`, Voiture `13`, Places `346, 355, 358, 367, 370`).
     - **Retour (03/01)** : TGV `6406` `15h06` St-Michel Valloire → `19h55` Paris Gare de Lyon (`2e classe`, Voiture `7`, Places `740, 741, 742, 744, 745`).
 - **26–27 Fév 2027 — Séminaire / Congrès Radiologie** (après garde de nuit du jeudi 25/02 à Cochin).
-- **13–17 Mai 2027 — Inauguration de la Bergerie à Ajaccio (Corse)** *(Réservé ✓ — dossier Air France dans le 🔒 coffre, 773,08 € pour Thomas & Marie)* :
+- **13–17 Mai 2027 — Inauguration de la Bergerie à Ajaccio (Corse)** *(Réservé ✓ — dossier Air France dans le 🔒 coffre, 821,08 € pour Thomas & Marie, billets émis le 09/11/2026)* :
   - **Aller** : `Jeudi 13 mai 2027` — `AF0777` (opéré par Air Corsica) Paris Orly `21h50` → Ajaccio `23h25` (même vol qu'Arthur et Matt).
-  - **Retour** : `Lundi 17 mai 2027` — `AF0772` (opéré par Air Corsica) Ajaccio `10h45` → Paris Orly `12h25`.
+  - **Retour** : `Lundi 17 mai 2027` — `AF7563` (Air France) Ajaccio `09h30` → Paris Orly `11h15` (même vol qu'Arthur et Matt).
   - Tarif Carte Week-End+ (`912766841` & `912766896`) : modifiable, remboursable (20 € de frais), 1 valise 23 kg chacun, sans assurance.
   - ⚠️ **Émile (né le 10/07/2024)** : billet enfant à ajouter par téléphone (Air France `09 69 39 36 54`) sur les vols du dossier (référence dans le 🔒 coffre).
 - **Historique 2026** : Normandie / Étretat / Cerza Safari Lodge / Dieppe (août), Marseille TGV (août), Trouville-Deauville (juillet), Corfou Transavia & Sixt (mai), Bandol (mai), Marbella Vueling (mars) — références dans le 🔒 coffre.
